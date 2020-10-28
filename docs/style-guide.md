@@ -90,16 +90,16 @@ their type.
 
   ```rust
   pub enum SomeError {
-    Argument,
-	InvalidData,
+      Argument,
+      InvalidData,
   }
   ```
 * **DON'T**:
 
   ```rust
   pub enum SomeError {
-    ArgumentError,
-	InvalidDataError,
+      ArgumentError,
+      InvalidDataError,
   }
   ```
 * **Rationale**: In this case, as we will likely refer to the enum value by
@@ -110,15 +110,15 @@ their type.
 
 | Package | Crate | Standalone Import | ICU Meta-package |
 |----|----|----|----|
-| locale | `icu-locale` | `use icu_locale::Locale` | `use icu::Locale` |
-| pluralrules | `icu-pluralrules` | `use icu_pluralrules::PluralRules` | `use icu::PluralRules` |
-| datetime | `icu-datetime` | `use icu_datetime::DateTimeFormat` | `use icu::DateTimeFormat` |
-| datetime | `icu-datetime` | `use icu_datetime::skeleton::SkeletonField` | `use icu::datetime::skeleton::SkeletonField` |
+| locale | `icu_locid` | `use icu_locid::Locale` | `use icu::Locale` |
+| plurals | `icu_plurals` | `use icu_plurals::PluralRules` | `use icu::PluralRules` |
+| datetime | `icu_datetime` | `use icu_datetime::DateTimeFormat` | `use icu::DateTimeFormat` |
+| datetime | `icu_datetime` | `use icu_datetime::skeleton::SkeletonField` | `use icu::datetime::skeleton::SkeletonField` |
 
 While the scheme may feel repetitive when looking at the import lines, it pays off in being unambigous without aliasing when multiple structs from different components get used together:
 
 ```rust
-use icu_locale::Locale;
+use icu_locid::Locale;
 use icu_datetime::{DateTimeFormat, DateTimeStyle, skeleton::{Skeleton, SkeletonField}};
 use icu_list::ListFormat;
 
@@ -621,8 +621,8 @@ While it's still an open question in the Rust community as to what the best way 
 ```rust
 // Nesting semantically interesting error information inside the generic error type.
 enum IcuError {
-    ParserError(parser::ParserError),
-    RuntimeError(...)
+    Parser(parser::ParserError),
+    Runtime(...)
 }
 ```
 
@@ -775,6 +775,19 @@ Main issues: [#77](https://github.com/unicode-org/icu4x/issues/77), [#151](https
 Most ICU4X code will not work in [no_std](https://rust-embedded.github.io/book/intro/no-std.html), since memory allocation is very often required to handle edge cases.  Even our most fundamental type, Locale, requires memory allocation.
 
 However, when designing traits and interfaces, we should make them `no_std`-friendly, such that we can more easily expand in this direction more easily in the future.
+
+### When to add crate [features][features] :: suggested
+
+When adding enhancements to an ICU4X component, introduce features as a way for
+the end user to control the code size of their compilation as follows:
+
+1. If the enhancement adds a new crate dependency, it should be behind a
+   feature.
+2. If the enhancement contains code that is not considered best practice, for
+   example if it is mainly used for debugging diagnostics or development, then
+   it should be behind a feature.
+
+[features]: https://doc.rust-lang.org/cargo/reference/features.html
 
 ## Dependencies
 
