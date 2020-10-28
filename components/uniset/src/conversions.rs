@@ -1,3 +1,6 @@
+// This file is part of ICU4X. For terms of use, please see the file
+// called LICENSE at the top level of the ICU4X source tree
+// (online at: https://github.com/unicode-org/icu4x/blob/master/LICENSE ).
 use std::{
     convert::TryFrom,
     ops::{Range, RangeBounds, RangeFrom, RangeFull, RangeInclusive, RangeTo, RangeToInclusive},
@@ -37,7 +40,7 @@ impl TryFrom<&RangeFull> for UnicodeSet {
     type Error = UnicodeSetError;
 
     fn try_from(_: &RangeFull) -> Result<Self, Self::Error> {
-        Ok(UnicodeSet::all())
+        Ok(Self::all())
     }
 }
 

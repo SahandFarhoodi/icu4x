@@ -1,3 +1,6 @@
+// This file is part of ICU4X. For terms of use, please see the file
+// called LICENSE at the top level of the ICU4X source tree
+// (online at: https://github.com/unicode-org/icu4x/blob/master/LICENSE ).
 use std::{
     char,
     ops::{Bound::*, RangeBounds},
@@ -11,7 +14,7 @@ pub fn is_valid(v: &[u32]) -> bool {
         && v.last().map_or(false, |e| e <= &((char::MAX as u32) + 1))
 }
 
-/// Returns start (inclusive) and end (excluisive) bounds of RangeBounds
+/// Returns start (inclusive) and end (excluisive) bounds of `RangeBounds`
 pub fn deconstruct_range(range: &impl RangeBounds<char>) -> (u32, u32) {
     let from = match range.start_bound() {
         Included(b) => (*b as u32),
